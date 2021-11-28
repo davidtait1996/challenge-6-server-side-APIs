@@ -62,7 +62,7 @@ var getWeatherData = function (lat, long, locationName) {
     });
 }
 
-var newLocationWeather = getCoordinates("Salt Lake City");
+// var newLocationWeather = getCoordinates("Salt Lake City");
 
 
 
@@ -81,6 +81,7 @@ $("#searchCol").on("click", ".locationBtn", function(event) {
 
   console.log(locationName);
   console.log(locationArr);
+
 });
 
 
