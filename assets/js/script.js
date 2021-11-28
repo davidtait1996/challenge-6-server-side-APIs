@@ -3,7 +3,8 @@
   //3. Do weather api search
   //4. do whatever with weather data
 
-var containerEl = document.querySelector(".container");
+var containerEl = $(".container");
+var searchColumnEl = $("#searchCol");
 var locationArr = [];
 
 var getCoordinates = function(locationName) {
@@ -12,8 +13,22 @@ var getCoordinates = function(locationName) {
     .then(function(response) {
       if (response.ok) {
         response.json().then(function(data) {
-          console.log("in coordinate function", data);
-          return data;
+          var newLocationObj = {
+            location: data.data[0].label.replace(/\s+/g, '').replace(/,/g,''),
+            lat: data.data[0].latitude,
+            long: data.data[0].longitude
+          }
+
+          var inArray = false;
+          for(var i=0; i < locationArr.length; i++){
+            if(locationArr[i].location === newLocationObj.location){
+              inArray = true;
+            }
+          }
+          if(!inArray){
+            locationArr.push(newLocationObj);
+          }
+          return getWeatherData(newLocationObj.lat, newLocationObj.long, newLocationObj.location);
         });
       } else {
         alert("Error: Location not found");
@@ -24,14 +39,19 @@ var getCoordinates = function(locationName) {
     });
 };
 
-var getWeatherData = function (lat, long) {
+var getWeatherData = function (lat, long, locationName) {
   var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat="+lat+"&lon="+long+"&appid=43a4f9fb4a44873ad703423f23b4250e"
   fetch(apiUrl)
     .then(function(response) {
       if (response.ok) {
         response.json().then(function(data) {
-          console.log(data);
-          return data;
+
+          var newLocationButton = $("<button>")
+            .addClass("btn locationBtn border")
+            .attr("id", locationName)
+            .text(locationName);
+          searchColumnEl.append(newLocationButton);
+
         });
       } else {
         alert("Error: Location not found");
@@ -42,29 +62,26 @@ var getWeatherData = function (lat, long) {
     });
 }
 
-var newCity = getCoordinates("Salt Lake City");
-console.log("test", newCity);
-// var newWeather = getWeatherData(newCity[0].latitude, newCity[0].longitude);
-// var newWeather = getWeatherData(40.773201, -111.933984);
-
-$(".searchBtn").on("click", function() {
-  var locationName = formData;
-  var locationData = getCoordinates(locationName);
-  var newLocation = {
-    city: locationData.label,
-    lat: locationData.latitude,
-    long: locationData.longitude,
-  }
-
-  // console.log(newLocation.city);
-
-  locationArr.push(newLocation);
-  var newLocationButton = $("<button>").addClass("btn").attr("id", newLocation.city);
-  containerEl.append(newLocationButton);
+var newLocationWeather = getCoordinates("Salt Lake City");
 
 
-})
 
+
+
+$("#searchBtn").on("click", function(event) {
+
+  event.preventDefault();
+
+  var formData = $("#city").val();
+  var weatherDataToPrint = getCoordinates(formData);
+});
+
+$("#searchCol").on("click", ".locationBtn", function(event) {
+  var locationName = $(this).attr("id");
+
+  console.log(locationName);
+  console.log(locationArr);
+});
 
 
 // $(".row").on("click", "i", function() {

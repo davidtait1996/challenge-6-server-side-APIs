@@ -24,14 +24,47 @@
   </head>
 
   <body>
-    <header class="jumbotron">
-      <h1 class="display-3">Work Day Scheduler</h1>
-      <p class="lead">A simple calendar app for scheduling your work day</p>
-      <p id="currentDay" class="lead"></p>
+    <header class="row">
+      <h1>Weather Dashboard</h1>
     </header>
 
-    <div class="container mb-5">
-      <button id="searchBtn" class="btn"></button>
+    <div class="container mb-5 row">
+      <div id="searchCol" class="col-3">
+        <div class="card">
+          <h3 class="card-header text-uppercase">Search for a City:</h3>
+          <form id="user-form" class="card-body">
+            <label class="form-label" for="city">San Diego</label>
+            <input name="city" id="city" type="text" autofocus="true" class="form-input" />
+            <button id="searchBtn" type="button" class="btn">Search</button>
+          </form>
+        </div>
+      </div>
+      <div id="weatherArea" class="col-9">
+        <div id="weatherData">
+          <h2>Atlanta</h2>
+          <p>Weather Data</p>
+        </div>
+        <p>
+          5-Day Forecast:
+        </p>
+        <div id="forecast" class = "row">
+          <div id="day1" class = "col-2">
+            Day1
+          </div>
+          <div id="day2" class = "col-2">
+            Day2
+          </div>
+          <div id="day2" class = "col-2">
+            Day3
+          </div>
+          <div id="day2" class = "col-2">
+            Day4
+          </div>
+          <div id="day2" class = "col-2">
+            Day5
+          </div>
+        </div>
+      </div>
     </div>
 
     
