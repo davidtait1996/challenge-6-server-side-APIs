@@ -2,8 +2,13 @@ var containerEl = $(".container");
 var searchColumnEl = $("#searchCol");
 var weatherAreaEl = $("#weatherArea");
 var forecastEl = $("#forecast");
+var mainCityEl = $("#weatherData .display-4");
+var mainWeatherEl = $("#weatherData .lead");
 var currentDay = moment();
 var dateFormat = 'M[/]D[/]YYYY'
+
+
+
 
 var getCoordinates = function(locationName) {
   var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q="+locationName+"&limit=1&appid=43a4f9fb4a44873ad703423f23b4250e";
@@ -11,23 +16,15 @@ var getCoordinates = function(locationName) {
     .then(function(response) {
       if (response.ok) {
         response.json().then(function(data) {
+          
           console.log(data);
           var newLocationObj = {
             location: data[0].name,
             lat: data[0].lat,
             long: data[0].lon
           }
-
-          // var inArray = false;
-          // for(var i=0; i < locationArr.length; i++){
-          //   if(locationArr[i].location === newLocationObj.location){
-          //     inArray = true;
-          //   }
-          // }
-          // if(!inArray){
-          //   locationArr.push(newLocationObj);
-          // }
           return getWeatherData(newLocationObj.lat, newLocationObj.long, newLocationObj.location);
+
         });
       } else {
         alert("Error: Location not found");
@@ -49,15 +46,15 @@ var getWeatherData = function (lat, long, locationName) {
 
           var condensedName = locationName.replace(/\s+/g, '').replace(/,/g,'');
 
+          data.name = locationName;
           if(localStorage.getItem(condensedName) === null){
             localStorage.setItem(condensedName, JSON.stringify(data));
+            var newLocationButton = $("<button>")
+              .addClass("btn locationBtn border")
+              .attr("id", condensedName)
+              .text(locationName);
+            searchColumnEl.append(newLocationButton);
           }
-
-          var newLocationButton = $("<button>")
-            .addClass("btn locationBtn border")
-            .attr("id", condensedName)
-            .text(locationName);
-          searchColumnEl.append(newLocationButton);
 
           displayWeather(condensedName);
 
@@ -98,6 +95,15 @@ var displayWeather = function(locationName){
 
   var weatherData = JSON.parse(localStorage.getItem(locationName));
 
+  mainCityEl.text(locationName + " " + (moment().format(dateFormat)));
+
+  mainWeatherEl.html(
+    "Temp: <span class=\"temp\">" + weatherData.current.temp + "F</span> <br>" +
+    "Wind: <span class=\"wind\">" + weatherData.current.wind_speed + " MPH</span> <br>" +
+    "Humidty: <span class=\"humid\">" + weatherData.current.humidity + "%</span> <br>" +
+    "UV Index: <span class=\"UV\">" + weatherData.current.uvi +" </span>"
+  );
+
   for(var i=1; i<6; i++){
     var tempEl = $("#day"+i+" .temp");
     tempEl.text(weatherData.daily[i-1].temp.max + "/" + weatherData.daily[i-1].temp.min);
@@ -110,11 +116,9 @@ var displayWeather = function(locationName){
   }
 
 
+
 }
 
-
-
-// var newLocationWeather = getCoordinates("Salt Lake City");
 
 
 $("#searchBtn").on("click", function(event) {
@@ -122,23 +126,29 @@ $("#searchBtn").on("click", function(event) {
   event.preventDefault();
 
   var formData = $("#city").val();
-  var weatherDataToPrint = getCoordinates(formData);
+  getCoordinates(formData);
 });
 
 $("#searchCol").on("click", ".locationBtn", function(event) {
   var locationName = $(this).attr("id");
 
-  console.log(locationName);
+  displayWeather(locationName);
 
 });
 
 
-// $(".row").on("click", "i", function() {
-//   var rowID = $(this).attr("id");
-//   var text = $("#"+rowID+"text").val();
-
-//   localStorage.setItem("#"+rowID+"text", text);
-// });
-
-
 createForecast();
+
+for(var i = 0; i<localStorage.length; i++){
+  var data = JSON.parse(localStorage[Object.keys(localStorage)[i]]);
+
+  mainCityEl.text(data.name + " " + (moment().format(dateFormat)));
+
+  var newLocationButton = $("<button>")
+    .addClass("btn locationBtn border")
+    .attr("id", data.name)
+    .text(data.name);
+  searchColumnEl.append(newLocationButton);
+
+  displayWeather(data.name);
+}

@@ -5,6 +5,7 @@ h1 {
 
 .container {
   margin: 0px;
+  width: 100%;
 }
 
 #weatherArea {
