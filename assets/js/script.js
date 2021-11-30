@@ -11,7 +11,7 @@ var dateFormat = 'M[/]D[/]YYYY'
 
 
 var getCoordinates = function(locationName) {
-  var apiUrl = "http://api.openweathermap.org/geo/1.0/direct?q="+locationName+"&limit=1&appid=43a4f9fb4a44873ad703423f23b4250e";
+  var apiUrl = "https://api.openweathermap.org/geo/1.0/direct?q="+locationName+"&limit=1&appid=43a4f9fb4a44873ad703423f23b4250e";
   fetch(apiUrl)
     .then(function(response) {
       if (response.ok) {
