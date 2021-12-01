@@ -4,6 +4,7 @@ var weatherAreaEl = $("#weatherArea");
 var forecastEl = $("#forecast");
 var mainCityEl = $("#weatherData .display-4");
 var mainWeatherEl = $("#weatherData .lead");
+var formInputEl = $("#city");
 var dateFormat = 'M[/]D[/]YYYY'
 
 
@@ -136,6 +137,17 @@ $("#searchBtn").on("click", function(event) {
 
   var formData = $("#city").val();
   getCoordinates(formData);
+});
+
+$("#city").keypress(function(event) {
+
+  if(event.which == 13){
+    event.preventDefault();
+
+    var formData = $("#city").val();
+    getCoordinates(formData);
+  }
+
 });
 
 $("#searchCol").on("click", ".locationBtn", function(event) {
