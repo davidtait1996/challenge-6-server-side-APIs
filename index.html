@@ -25,61 +25,31 @@
 
   <body>
     <header class="row">
-      <h1>Weather Dashboard</h1>
+      <h1 class="text-center w-100 text-light">Weather Dashboard</h1>
     </header>
 
-    <div class="container1 mb-5 row">
-      <div id="searchCol" class="col-2">
-        <div class="card">
-          <h3 class="card-header text-uppercase">Search for a City:</h3>
-          <form id="user-form" class="card-body">
+    <div class="mb-5 row">
+      <div id="searchCol" class="col-2 text-center">
+        <div class="card mb-1">
+          <h4 class="card-header text-uppercase text-center">Search for a City:</h4>
+          <form id="user-form" class="card-body text-center">
             <label class="form-label" for="city"></label>
-            <input name="city" id="city" type="text" autofocus="true" class="form-input" placeholder="Ex: San Diego" />
-            <button id="searchBtn" type="button" class="btn">Search</button>
+            <input name="city" id="city" type="text" autofocus="true" class="form-input text-center" placeholder="Ex: San Diego" />
+            <button id="searchBtn" type="button" class="btn btn-primary mt-2">Search</button>
           </form>
         </div>
       </div>
       <div id="weatherArea" class="col-10">
         <div id="weatherData" class="jumbotron jumbotron-fluid text-center">
-          <div class="container1">
+          <div>
             <h1 class="display-4"></h1>
             <p class="lead"></p>
           </div>
         </div>
-        <p>
+        <h2>
           5-Day Forecast:
-        </p>
+        </h2>
         <div id="forecast" class = "row">
-          <!-- <div id="day1" class = "col-2 card">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-            </div>
-          </div>
-          <div id="day2" class = "col-2 card">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-            </div>
-          </div>
-          <div id="day3" class = "col-2 card">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-            </div>
-          </div>
-          <div id="day4" class = "col-2 card">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-            </div>
-          </div>
-          <div id="day5" class = "col-2 card">
-            <div class="card-header">
-            </div>
-            <div class="card-body">
-            </div>
-          </div> -->
         </div>
       </div>
     </div>

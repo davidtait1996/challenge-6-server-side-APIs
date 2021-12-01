@@ -1,13 +1,16 @@
-h1 {
-  text-align: center;
-  width: 100%;
+header {
+  background-image: linear-gradient(to right, #6495ED, #00008B);
 }
 
-.container {
-  margin: 0px;
-  width: 100%;
+#searchBtn {
+  background-image: linear-gradient(to right, #6495ED, #00008B);
 }
 
-#weatherArea {
-  width: 100%;
+.locationBtn {
+  background-color: #A9A9A9;
+}
+
+#forecast > .card {
+  background-color: #00008B;
+  color: white;
 }

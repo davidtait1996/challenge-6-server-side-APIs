@@ -50,7 +50,7 @@ var getWeatherData = function (lat, long, locationName) {
           if(localStorage.getItem(condensedName) === null){
             localStorage.setItem(condensedName, JSON.stringify(data));
             var newLocationButton = $("<button>")
-              .addClass("btn locationBtn border")
+              .addClass("btn locationBtn border w-100")
               .attr("id", condensedName)
               .text(locationName);
             searchColumnEl.append(newLocationButton);
@@ -71,15 +71,15 @@ var getWeatherData = function (lat, long, locationName) {
 var createForecast = function() {
   for(var i=1; i<6; i++){
     var dayEl = $("<div>")
-                  .addClass("col-2 card")
+                  .addClass("col-2 card mx-2")
                   .attr("id","day"+i);
-    var cardHeaderEl = $("<div>")
+    var cardHeaderEl = $("<h4>")
                         .addClass("card-header")
                         .text(moment().add(i,"days").format(dateFormat));
     var cardBodyEl = $("<div>")
                       .addClass("card-body");
     cardBodyEl.html(
-      "Icon: <br>" +
+      "Icon: <span class=\"icon\"></span> <br>" +
       "Temp: <span class=\"temp\"></span> <br>" +
       "Wind: <span class=\"wind\"></span> <br>" +
       "Humidty: <span class=\"humid\"></span>"
@@ -94,22 +94,33 @@ var createForecast = function() {
 var displayWeather = function(locationName){
 
   var weatherData = JSON.parse(localStorage.getItem(locationName));
+  var clouds = weatherData.current.clouds;
+  var cloudClass = "";
 
-  mainCityEl.text(locationName + " " + (moment().format(dateFormat)));
+  if(clouds >= 0 && clouds <= 33){
+    cloudClass = ".fas .fa-sun";
+  } else if (clouds > 33 && clouds < 66) {
+    cloudClass = ".fas .fa-clouds-sun";
+  } else {
+    cloudClass = ".fas .fa-clouds";
+  }
+
+  mainCityEl.html(locationName + " " + (moment().format(dateFormat)) + "<i class=\"fas fa-clouds fa-lg\"></i>");
+  // mainCityEl.html(locationName + " " + (moment().format(dateFormat)) + "<i class=" + cloudClass + "></i>");
 
   mainWeatherEl.html(
-    "Temp: <span class=\"temp\">" + weatherData.current.temp + "F</span> <br>" +
-    "Wind: <span class=\"wind\">" + weatherData.current.wind_speed + " MPH</span> <br>" +
+    "Temp: <span class=\"temp\">" + Math.trunc(weatherData.current.temp) + "F</span> <br>" +
+    "Wind: <span class=\"wind\">" + Math.trunc(weatherData.current.wind_speed) + " MPH</span> <br>" +
     "Humidty: <span class=\"humid\">" + weatherData.current.humidity + "%</span> <br>" +
     "UV Index: <span class=\"UV\">" + weatherData.current.uvi +" </span>"
   );
 
   for(var i=1; i<6; i++){
     var tempEl = $("#day"+i+" .temp");
-    tempEl.text(weatherData.daily[i-1].temp.max + "/" + weatherData.daily[i-1].temp.min);
+    tempEl.text(Math.trunc(weatherData.daily[i-1].temp.max) + "/" + Math.trunc(weatherData.daily[i-1].temp.min));
 
     var windEl = $("#day"+i+" .wind");
-    windEl.text(weatherData.daily[i-1].wind_speed + " MPH");
+    windEl.text(Math.trunc(weatherData.daily[i-1].wind_speed) + " MPH");
 
     var humidEl = $("#day"+i+" .humid");
     humidEl.text(weatherData.daily[i-1].humidity + "%");
@@ -118,7 +129,6 @@ var displayWeather = function(locationName){
 
 
 }
-
 
 
 $("#searchBtn").on("click", function(event) {
@@ -145,7 +155,7 @@ for(var i = 0; i<localStorage.length; i++){
   mainCityEl.text(data.name + " " + (moment().format(dateFormat)));
 
   var newLocationButton = $("<button>")
-    .addClass("btn locationBtn border")
+    .addClass("btn locationBtn border w-100")
     .attr("id", data.name)
     .text(data.name);
   searchColumnEl.append(newLocationButton);
