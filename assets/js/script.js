@@ -4,7 +4,6 @@ var weatherAreaEl = $("#weatherArea");
 var forecastEl = $("#forecast");
 var mainCityEl = $("#weatherData .display-4");
 var mainWeatherEl = $("#weatherData .lead");
-var currentDay = moment();
 var dateFormat = 'M[/]D[/]YYYY'
 
 
@@ -117,7 +116,7 @@ var displayWeather = function(locationName){
 
   for(var i=1; i<6; i++){
     var tempEl = $("#day"+i+" .temp");
-    tempEl.text(Math.trunc(weatherData.daily[i-1].temp.max) + "/" + Math.trunc(weatherData.daily[i-1].temp.min));
+    tempEl.text(Math.trunc(weatherData.daily[i-1].temp.max) + "F/" + Math.trunc(weatherData.daily[i-1].temp.min) + "F");
 
     var windEl = $("#day"+i+" .wind");
     windEl.text(Math.trunc(weatherData.daily[i-1].wind_speed) + " MPH");
