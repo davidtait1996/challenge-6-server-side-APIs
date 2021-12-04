@@ -42,7 +42,7 @@ var getWeatherData = function (lat, long, locationName) {
       if (response.ok) {
         response.json().then(function(data) {
 
-          console.log(data);
+          console.log(locationName, data);
 
           var condensedName = locationName.replace(/\s+/g, '').replace(/,/g,'');
 
@@ -79,7 +79,7 @@ var createForecast = function() {
     var cardBodyEl = $("<div>")
                       .addClass("card-body");
     cardBodyEl.html(
-      "Icon: <span class=\"icon\"></span> <br>" +
+      "<img class=\"icon\"></img> <br>" +
       "Temp: <span class=\"temp\"></span> <br>" +
       "Wind: <span class=\"wind\"></span> <br>" +
       "Humidty: <span class=\"humid\"></span>"
@@ -94,28 +94,29 @@ var createForecast = function() {
 var displayWeather = function(locationName){
 
   var weatherData = JSON.parse(localStorage.getItem(locationName));
-  var clouds = weatherData.current.clouds;
-  var cloudClass = "";
 
-  if(clouds >= 0 && clouds <= 33){
-    cloudClass = ".fas .fa-sun";
-  } else if (clouds > 33 && clouds < 66) {
-    cloudClass = ".fas .fa-clouds-sun";
-  } else {
-    cloudClass = ".fas .fa-clouds";
-  }
+  console.log(weatherData);
 
-  mainCityEl.html(locationName + " " + (moment().format(dateFormat)) + "<i class=\"fas fa-clouds fa-lg\"></i>");
-  // mainCityEl.html(locationName + " " + (moment().format(dateFormat)) + "<i class=" + cloudClass + "></i>");
+  mainCityEl.html(weatherData.name + " " + (moment().format(dateFormat)));
+
+  var mainIconCode = weatherData.current.weather[0].icon;
 
   mainWeatherEl.html(
+    "<img class=\"icon\" src = \"\"> <br>" +
     "Temp: <span class=\"temp\">" + Math.trunc(weatherData.current.temp) + "F</span> <br>" +
     "Wind: <span class=\"wind\">" + Math.trunc(weatherData.current.wind_speed) + " MPH</span> <br>" +
     "Humidty: <span class=\"humid\">" + weatherData.current.humidity + "%</span> <br>" +
     "UV Index: <span class=\"UV\">" + weatherData.current.uvi +" </span>"
   );
 
+  $("#weatherData .icon").attr("src", "http://openweathermap.org/img/w/" + mainIconCode + ".png");
+
   for(var i=1; i<6; i++){
+
+    var iconEl = $("#day"+i+" .icon");
+    var iconCode = weatherData.daily[i].weather[0].icon;
+    iconEl.attr("src", "http://openweathermap.org/img/w/" + iconCode + ".png");
+
     var tempEl = $("#day"+i+" .temp");
     tempEl.text(Math.trunc(weatherData.daily[i-1].temp.max) + "F/" + Math.trunc(weatherData.daily[i-1].temp.min) + "F");
 
@@ -125,8 +126,6 @@ var displayWeather = function(locationName){
     var humidEl = $("#day"+i+" .humid");
     humidEl.text(weatherData.daily[i-1].humidity + "%");
   }
-
-
 
 }
 
@@ -152,6 +151,7 @@ $("#city").keypress(function(event) {
 
 $("#searchCol").on("click", ".locationBtn", function(event) {
   var locationName = $(this).attr("id");
+  console.log(locationName);
 
   displayWeather(locationName);
 
@@ -160,16 +160,20 @@ $("#searchCol").on("click", ".locationBtn", function(event) {
 
 createForecast();
 
+
+//create search history buttons
 for(var i = 0; i<localStorage.length; i++){
   var data = JSON.parse(localStorage[Object.keys(localStorage)[i]]);
 
   mainCityEl.text(data.name + " " + (moment().format(dateFormat)));
 
+  var shortName = data.name.replace(/\s+/g, '').replace(/,/g,'');
+
   var newLocationButton = $("<button>")
     .addClass("btn locationBtn border w-100")
-    .attr("id", data.name)
+    .attr("id", shortName)
     .text(data.name);
   searchColumnEl.append(newLocationButton);
 
-  displayWeather(data.name);
-}
+  displayWeather(shortName);
+};
